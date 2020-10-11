@@ -6,7 +6,7 @@ function chunkArrayInGroups(arr, size) {
     let newArr = [];
   
     // loop through each item in the array, after indexing over a position, i will equal to itself added with the size value passed in.
-    for (i = 0; i < arr.length; i += size) {
+    for (let i = 0; i < arr.length; i += size) {
   
       // remove elements between the position that matches the value of i and the position that matches the value stored in i plus the value passed in as size. after these elements have been removed, push them into the new array we created in newArr.
       newArr.push(arr.slice(i, i + size));
@@ -17,4 +17,3 @@ function chunkArrayInGroups(arr, size) {
   }
   
   chunkArrayInGroups(["a", "b", "c", "d"], 2);
-  
