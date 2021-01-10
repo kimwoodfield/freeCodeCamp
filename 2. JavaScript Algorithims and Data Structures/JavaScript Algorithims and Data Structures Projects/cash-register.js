@@ -1,104 +1,52 @@
+// CASH REGISTER PROJECT
+
 function checkCashRegister(price, cash, cid) {
 
-    // Amount owed (multiplied by 100)
-    let amountOwed = (cash - price) * 100;
-    console.log(amountOwed);
+    // How much we owe the customer.
+    let whatWeOwe = (cash - price) * 100;
 
-    // Denominations (multiplied by 100)
+    // Denominations / Currency unit value
     const denominations = [1, 5, 10, 25, 100, 500, 1000, 2000, 10000];
 
-    // Create the object we will return
-    let answer = {
-        status: null,
-        change: []
-    };
+    // Object to return
+    let obj = {status: null,change: []}
 
-    // Loop backwards through the CID array
+    // Loop backwards through the cid array from highest to lowest value.
     for (let i = cid.length - 1; i >= 0; i--) {
-        let currentBill = cid[i];
-        let availableBills = cid[i][1] * 100;
         let amount = 0;
+        let availableBills = cid[i][1] * 100;
         let value = denominations[i];
 
-        // Basically, as long as what we owe is greater than the value of the current bill and while there are bills available to take, reduce how many available bills we have by what they are worth, decrease what we owe by the same value and add the value of the bill to the amount we can return.
-        while (amountOwed >= value && availableBills >= value) {
+        // While what we owe is more than the value of the current bill and while the current bill has bills available - remove a bill from the till, deduct that bill's value from what we owe the customer and add it to the amount we will return the customer
+        while (whatWeOwe >= value && availableBills >= value) {
             availableBills -= value;
-            amountOwed -= value;
+            whatWeOwe -= value;
             amount += value;
         }
-        console.log(availableBills);
-        console.log(amountOwed);
-        console.log(amount);
-
-        // If there are no available bills, change the register to closed.
-        if (availableBills == 0) {
-            answer.status = "CLOSED";
-        }
-
-        // Otherwise, the register is open. 
-        else {
-            answer.status = "OPEN";
-        };
-
-<<<<<<< HEAD
-            // if there are availableBills, deduct them from the availableBills and add them to the amount we will give back to the customer
-            if (availableBills >= amountOwed) {
-                // while the amountOwed and the amount we have to return the customer are different, keep taking money out until the customer has the right amount to be returned.
-                while (amount !== amountOwed) {
-                    availableBills = availableBills - currencyUnit;
-                    amount = amount + currencyUnit;
-                        // if the value stored in the amount variable is the same as what we owed the customer, append that to the object we send back.
-                        if(amount == amountOwed) {
-                            let returnArray = [];
-                            answer.status = "OPEN";
-                            returnArray.push(cid[i][0], amount);
-                            answer.change.push(returnArray);
-                            return answer;
-                        }
-                }
-                // if the amount owed is the same as the value stored in that currency unit's bills, then push the original cid array back into our returning object.
-                if (amountOwed == cid[0][1]) {
-                    let anotherArr = [];
-                    answer.status = "CLOSED";
-                    answer.change.push(cid);
-                    console.log('we got here lol');
-                }
-            } 
-            // if there are no availableBills that we can return the customer, return insufficient funds.
-            else {
-                answer.status = "INSUFFICIENT_FUNDS";
-                return answer;
-            }
-=======
-        // If the amount we will return to the customer is more than 0 during the current iteration, add the value of the current bill that we can return to the running total of that bill we will be returning.
+        // If the amount to return is more than zero, add the bill value to a running total of what we can return of that bill and divide by 100 to return to its original value.
         if (amount > 0) {
-            answer.change.push([currentBill[0], amount / 100]);
->>>>>>> 605cfd42bae569bf20f64c49b8e92e77f0a9bd27
+            obj.change.push([cid[i][0], amount / 100]);
+        };
+        // If there are no bills available, the register is closed.
+        if (availableBills == 0) {
+            obj.status = "CLOSED";
+        } 
+        // Otherwise the register is open.
+        else {
+            obj.status = "OPEN";
         }
     }
-    // If the amount we owe is more than 0, it means we've looped through all of our availableBills and can't make up the total, so return insufficient funds.
-    if (amountOwed > 0) {
-        answer.status = "INSUFFICIENT_FUNDS";
-        answer.change = [];
-        return answer;
+    // If we looped through the entire cid array and what we owe is above 0 then it means we could not return the customer their full amount, so return INSUFFICIENT_FUNDS and an empty array.
+    if (whatWeOwe > 0) {
+        obj.status = "INSUFFICIENT_FUNDS";
+        obj.change = [];
+        return obj;
+    } 
+    // Otherwise if what we owe IS zero and the register is closed, it means we found the exact amount in our register so return the cid array.
+    else if (obj.status == "CLOSED") {
+        obj.change = cid;
     }
-    // Otherwise, if the status of the object was changed to closed but what we owe equals 0 it means that we had just enough change in the register to return to the customer so return the cid array.
-    else if (answer.status == "CLOSED") {
-        answer.change = cid;
-    }
-    return answer;
-
-
+    return obj;
 }
 
-checkCashRegister(3.26, 100, [
-    ["PENNY", 1.01],
-    ["NICKEL", 2.05],
-    ["DIME", 3.1],
-    ["QUARTER", 4.25],
-    ["ONE", 90],
-    ["FIVE", 55],
-    ["TEN", 20],
-    ["TWENTY", 60],
-    ["ONE HUNDRED", 100]
-]);
+checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
