@@ -84,14 +84,15 @@ function checkCashRegister(price, cash, cid) {
                             return answer;
                         }
                 }
+                // if the amount owed is the same as the value stored in that currency unit's bills, then push the original cid array back into our returning object.
                 if (amountOwed == cid[0][1]) {
                     let anotherArr = [];
                     answer.status = "CLOSED";
                     answer.change.push(cid);
                     console.log('we got here lol');
                 }
-            // if there are no availableBills that we can return the customer, return insufficient funds.
             } 
+            // if there are no availableBills that we can return the customer, return insufficient funds.
             else {
                 answer.status = "INSUFFICIENT_FUNDS";
                 return answer;
